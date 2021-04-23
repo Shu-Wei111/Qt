@@ -2,9 +2,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
 
-    right_velocity = 0
-    left_velocity = 0
-
     def setupUi(self, MainWindow):
 
         MainWindow.setObjectName("MainWindow")
@@ -16,6 +13,8 @@ class Ui_MainWindow(object):
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
         self.tabWidget.setGeometry(QtCore.QRect(30, 20, 801, 511))
         self.tabWidget.setObjectName("tabWidget")
+
+        # ## Tab_1 ## #
         self.mode1 = QtWidgets.QWidget()
         self.mode1.setObjectName("mode1")
 
@@ -77,7 +76,7 @@ class Ui_MainWindow(object):
         self.left_lcd.setObjectName("left_lcd")
         self.gridLayout_2.addWidget(self.left_lcd, 1, 0, 1, 1)
 
-        # Battery
+        # Battery Progress
         self.progressBar = QtWidgets.QProgressBar(self.gridLayoutWidget_2)
         self.progressBar.setProperty("value", 24)
         self.progressBar.setObjectName("progressBar")
@@ -131,10 +130,29 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.B6, 1, 2, 1, 1)
 
         self.tabWidget.addTab(self.mode1, "")
-        self.mode2 = QtWidgets.QWidget()
-        self.mode2.setObjectName("mode2")
 
-        self.tabWidget.addTab(self.mode2, "")
+        # ## Tab_2 ## #
+        self.HX711_plot = QtWidgets.QWidget()
+        self.HX711_plot.setObjectName("HX711_plot")
+
+        # objects in tab2
+        self.plot_action = QtWidgets.QPushButton(self.HX711_plot)
+        self.plot_action.setGeometry(QtCore.QRect(320, 380, 161, 81))
+        self.plot_action.setObjectName("plot_action")
+
+        # group box
+        self.groupBox = QtWidgets.QGroupBox(self.HX711_plot)
+        self.groupBox.setGeometry(QtCore.QRect(100, 20, 601, 351))
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        self.groupBox.setFont(font)
+        self.groupBox.setMouseTracking(False)
+        self.groupBox.setTabletTracking(False)
+        self.groupBox.setAlignment(QtCore.Qt.AlignCenter)
+        self.groupBox.setObjectName("groupBox")
+
+        self.tabWidget.addTab(self.HX711_plot, "")
+        # tab_3
         self.mode3 = QtWidgets.QWidget()
         self.mode3.setObjectName("mode3")
         self.tabWidget.addTab(self.mode3, "")
@@ -152,10 +170,11 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def retranslateUi(self, MainWindow): # interface
+    def retranslateUi(self, MainWindow):  # ui block
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
+        # tab_1
         self.supervisor.setText(_translate("MainWindow", "I'm supervisor"))
         self.right.setText(_translate("MainWindow", ">"))
         self.left.setText(_translate("MainWindow", "<"))
@@ -171,6 +190,11 @@ class Ui_MainWindow(object):
         self.B4.setText(_translate("MainWindow", "4"))
         self.B5.setText(_translate("MainWindow", "5"))
         self.B6.setText(_translate("MainWindow", "6"))
+
+        # tab_2
+        self.groupBox.setTitle(_translate("MainWindow", "GroupBox"))
+        self.plot_action.setText(_translate("MainWindow", "action"))
+
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.mode1), _translate("MainWindow", "Tab 1"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.mode2), _translate("MainWindow", "Tab 2"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.HX711_plot), _translate("MainWindow", "HX711_plot"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.mode3), _translate("MainWindow", "Page"))
