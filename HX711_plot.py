@@ -4,7 +4,7 @@ matplotlib.use("Qt5Agg")
 import numpy as np
 import matplotlib.pyplot as pyplot
 
-COM_PORT = '/dev/tty.usbmodem1420'
+COM_PORT = '/dev/tty.usbmodem14201'
 BAUD_RATES = 115200
 ser = serial.Serial(COM_PORT, BAUD_RATES)
 
@@ -24,6 +24,9 @@ pyplot.show()
 i = 0
 
 class ReadLine:
+    # action 是否被開啟 開啟就繼續執行
+    # action 是否被開啟 沒開啟就跳掉
+
     def __init__(self, s):
         self.buf = bytearray()
         self.s = s
