@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from PyQt5 import QtWidgets
 import serial
+from PyQt5.QtWidgets import QGridLayout
+
 from ui import Ui_MainWindow
 # import HX711_plot as HX
 import sys
 
 import matplotlib
-matplotlib.use("Qt5Agg")
+matplotlib.use("Qt5Agg")  #宣告使用Qt5
 import numpy as np
 import matplotlib.pyplot as pyplot
 
@@ -48,6 +50,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.progressBar.setMaximum(100)
         self.ui.progressBar.setValue(0)  # set initial value
 
+        # 在GUI的groupBox中建立一個佈局，用於新增MyFigure類的例項（即圖形）或其他部件。
+        self.gridlayout = QGridLayout(self.ui.groupBox)  # 繼承容器groupBox
+        self.gridlayout.addWidget(self.fig, 0, 1)
+
         # tab1 button clicked trigger
         self.ui.stop.clicked.connect(self.stop_button_clicked)
         self.ui.right.clicked.connect(self.right_button_clicked)
@@ -63,11 +69,12 @@ class MainWindow(QtWidgets.QMainWindow):
         print("stop")
 
     def right_button_clicked(self):
-        self.right_velocity = self.right_velocity + 5
+        self.right_velocity = self.right_velocity + 1
         self.ui.right_lcd.display(self.right_velocity)  # lcd test
         self.ui.progressBar.setValue(self.right_velocity)  # progress test
         ser.write("a".encode())
         print("right")
+
     def forward_button_clicked(self):
         print("forward")
     def left_button_clicked(self):
@@ -78,8 +85,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def backward_button_clicked(self):
         print("backward")
 
+    # tab 2
     def plot_action_button_clicked(self):
-        ReadLine.readdd(self, 0)
+        ReadLine.getData(self, 0)
         print("gogo")
 
     def set_tab_groupbox(self):
@@ -111,7 +119,7 @@ class ReadLine(MainWindow):
                 return r
             else:
                 self.buf.extend(data)
-    def readdd(self, i):
+    def getData(self, i):
         try:
             while True:
                 while ser.inWaiting():

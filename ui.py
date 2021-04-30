@@ -16,7 +16,7 @@ class Ui_MainWindow(object):
 
         # ## Tab_1 ## #
         self.mode1 = QtWidgets.QWidget()
-        self.mode1.setObjectName("mode1")
+        self.mode1.setObjectName("Car Controller")
 
         self.supervisor = QtWidgets.QLabel("Ready!")
         font = QtGui.QFont()
@@ -195,6 +195,6 @@ class Ui_MainWindow(object):
         self.groupBox.setTitle(_translate("MainWindow", "GroupBox"))
         self.plot_action.setText(_translate("MainWindow", "action"))
 
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.mode1), _translate("MainWindow", "Tab 1"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.mode1), _translate("MainWindow", "Car Controller"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.HX711_plot), _translate("MainWindow", "HX711_plot"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.mode3), _translate("MainWindow", "Page"))
