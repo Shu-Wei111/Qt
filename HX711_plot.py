@@ -1,15 +1,8 @@
-import serial
-import matplotlib
-matplotlib.use("Qt5Agg")
-import numpy as np
 import matplotlib.pyplot as pyplot
-
-COM_PORT = '/dev/tty.usbmodem14201'
-BAUD_RATES = 115200
-ser = serial.Serial(COM_PORT, BAUD_RATES)
 
 x = []
 y = []
+
 fig = pyplot.figure()
 ax = fig.add_subplot(111)
 line1, = ax.plot(x, y, 'o-', lw=10, markersize=20)
@@ -27,9 +20,12 @@ class ReadLine:
     # action 是否被開啟 開啟就繼續執行
     # action 是否被開啟 沒開啟就跳掉
 
+    read_break = False
+
     def __init__(self, s):
         self.buf = bytearray()
         self.s = s
+
 
     print('hello')
     def readline(self):
@@ -49,25 +45,35 @@ class ReadLine:
             else:
                 self.buf.extend(data)
 
-try:
-    while True:
-        while ser.inWaiting():
+    def getData(self, i, ser, read_break=False):
+        while not read_break:
+            try:
+                while True:
+                    while ser.inWaiting():
+                        i += 1
+                        test = ReadLine(ser)
+                        data = test.readline()
+                        data = data.decode()
+                        data = data.split(',')
+                        x.append(int(data[0]))
+                        y.append(int(data[1]))
+                        if i > 3:
+                            x.pop(0)
+                            y.pop(0)
+                        line1.set_data(x, y)
+                        ax.autoscale_view(True, True, True)
+                        fig.canvas.draw()
+                        pyplot.pause(0.00001)
+            except KeyboardInterrupt:
+                ser.close()  # close serial
+                pyplot.close(fig)  # close figure
+                print('goodbye')
 
-            i += 1
-            test = ReadLine(ser)
-            data = test.readline()
-            data = data.decode()
-            data = data.split(',')
-            x.append(int(data[0]))
-            y.append(int(data[1]))
-            if i > 3:
-                x.pop(0)
-                y.pop(0)
-            line1.set_data(x, y)
-            ax.autoscale_view(True, True, True)
-            fig.canvas.draw()
-            pyplot.pause(0.00001)
+        ser.close()  # close serial
+        pyplot.close(fig)  # close figure
+        print('goodbye')
 
-except KeyboardInterrupt:
-    ser.close()
-    print('goodbye')
+
+    def plot_close(self, ser):
+        ser.close()  # close serial
+        pyplot.close('all')  # close figure

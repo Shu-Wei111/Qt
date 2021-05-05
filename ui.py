@@ -1,4 +1,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QGridLayout
+import matplotlib
+matplotlib.use("Qt5Agg")  # 宣告使用Qt5
+import matplotlib.pyplot as pyplot
 
 class Ui_MainWindow(object):
 
@@ -137,8 +141,15 @@ class Ui_MainWindow(object):
 
         # objects in tab2
         self.plot_action = QtWidgets.QPushButton(self.HX711_plot)
-        self.plot_action.setGeometry(QtCore.QRect(320, 380, 161, 81))
+        self.plot_action.setGeometry(QtCore.QRect(240, 390, 161, 81))
         self.plot_action.setObjectName("plot_action")
+
+        self.plot_stop= QtWidgets.QPushButton(self.HX711_plot)
+        self.plot_stop.setGeometry(QtCore.QRect(420, 390, 161, 81))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.plot_stop.setFont(font)
+        self.plot_stop.setObjectName("plot_stop")
 
         # group box
         self.groupBox = QtWidgets.QGroupBox(self.HX711_plot)
@@ -146,8 +157,6 @@ class Ui_MainWindow(object):
         font = QtGui.QFont()
         font.setPointSize(18)
         self.groupBox.setFont(font)
-        self.groupBox.setMouseTracking(False)
-        self.groupBox.setTabletTracking(False)
         self.groupBox.setAlignment(QtCore.Qt.AlignCenter)
         self.groupBox.setObjectName("groupBox")
 
@@ -194,6 +203,7 @@ class Ui_MainWindow(object):
         # tab_2
         self.groupBox.setTitle(_translate("MainWindow", "GroupBox"))
         self.plot_action.setText(_translate("MainWindow", "action"))
+        self.plot_stop.setText(_translate("MainWindow", "stop"))
 
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.mode1), _translate("MainWindow", "Car Controller"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.HX711_plot), _translate("MainWindow", "HX711_plot"))
