@@ -66,14 +66,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # tab 2
     def plot_action_button_clicked(self):
-        HX.ReadLine.getData(self, 0, ser)
+        HX.read_continue = True
+        HX.ReadLine.getData(self, ser)
 
     def plot_stop_button_clicked(self):
-        # HX.ReadLine.getData(self, 0, ser)
-        HX.read_break = True
+        HX.read_continue = False
         print('Figure closed!')
-
-
 
 
 if __name__ == "__main__":

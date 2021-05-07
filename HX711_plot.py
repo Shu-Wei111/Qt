@@ -1,31 +1,20 @@
 import matplotlib.pyplot as pyplot
+from PyQt5 import QtGui, QtWidgets
+from matplotlib.backends.backend_template import FigureCanvas
 
-x = []
-y = []
+from ui import Ui_MainWindow
 
-fig = pyplot.figure()
-ax = fig.add_subplot(111)
-line1, = ax.plot(x, y, 'o-', lw=10, markersize=20)
-
-pyplot.xlabel('X')
-pyplot.ylabel('Y')
-pyplot.title('Center of mass')
-pyplot.axis([-2000, 2000, -2000, 2000])
-pyplot.grid(axis='y')
-pyplot.ion()
-pyplot.show()
+read_continue = True
 i = 0
 
 class ReadLine:
     # action 是否被開啟 開啟就繼續執行
     # action 是否被開啟 沒開啟就跳掉
 
-    read_break = False
-
     def __init__(self, s):
+        self.ui = Ui_MainWindow()
         self.buf = bytearray()
         self.s = s
-
 
     print('hello')
     def readline(self):
@@ -45,35 +34,65 @@ class ReadLine:
             else:
                 self.buf.extend(data)
 
-    def getData(self, i, ser, read_break=False):
-        while not read_break:
-            try:
-                while True:
-                    while ser.inWaiting():
-                        i += 1
-                        test = ReadLine(ser)
-                        data = test.readline()
-                        data = data.decode()
-                        data = data.split(',')
-                        x.append(int(data[0]))
-                        y.append(int(data[1]))
-                        if i > 3:
-                            x.pop(0)
-                            y.pop(0)
-                        line1.set_data(x, y)
-                        ax.autoscale_view(True, True, True)
-                        fig.canvas.draw()
-                        pyplot.pause(0.00001)
-            except KeyboardInterrupt:
-                ser.close()  # close serial
-                pyplot.close(fig)  # close figure
-                print('goodbye')
+    def getData(self,  ser):
 
-        ser.close()  # close serial
-        pyplot.close(fig)  # close figure
-        print('goodbye')
+        x = []
+        y = []
 
+        # fig = pyplot.figure(figsize=(5, 3))
+        fig = pyplot.figure()
+        ax = fig.add_subplot(111)
+        line1, = ax.plot(x, y, 'o-', lw=10, markersize=20)
 
-    def plot_close(self, ser):
-        ser.close()  # close serial
-        pyplot.close('all')  # close figure
+        pyplot.xlabel('X')
+        pyplot.ylabel('Y')
+        pyplot.title('Center of mass')
+        pyplot.axis([-2000, 2000, -2000, 2000])
+        pyplot.grid(axis='y')
+        pyplot.ion()
+        pyplot.show()
+        pyplot.tight_layout()
+
+        # ## Tab_2 ## #
+        self.ui.HX711_plot = QtWidgets.QWidget()
+        self.ui.HX711_plot.setObjectName("HX711_plot")
+
+        # objects in tab2
+        self.figure = fig
+        self.canvas = FigureCanvas(self.figure)
+
+        layout = QtGui.QVBoxLayout()
+        layout.addWidget(self.canvas)
+        self.setLayout(layout)
+        self.plot()
+
+        self.tabWidget.addTab(self.HX711_plot, "")
+
+        j = 0
+
+        try:
+            while read_continue:
+                print("wait")
+                while ser.inWaiting():
+                    j += 1
+                    test = ReadLine(ser)
+                    data = test.readline()
+                    data = data.decode()
+                    data = data.split(',')
+                    x.append(int(data[0]))
+                    y.append(int(data[1]))
+                    if j > 3:
+                        x.pop(0)
+                        y.pop(0)
+                    line1.set_data(x, y)
+                    ax.autoscale_view(True, True, True)
+                    fig.canvas.draw()
+                    pyplot.pause(0.00001)
+
+            # ser.close()  # close serial
+            pyplot.close(fig)  # close figure
+            print('goodbye')
+
+        except KeyboardInterrupt:
+            pyplot.close(fig)  # close figure
+            print('goodbye')
