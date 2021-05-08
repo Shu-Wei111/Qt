@@ -1,22 +1,26 @@
 import matplotlib.pyplot as pyplot
 from PyQt5 import QtGui, QtWidgets
-from matplotlib.backends.backend_template import FigureCanvas
+from PyQt5.QtWidgets import QGridLayout, QDialog
 
 from ui import Ui_MainWindow
+import numpy as np
+import matplotlib
+
+matplotlib.use("Qt5Agg")  # 声明使用QT5
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 read_continue = True
 i = 0
 
 class ReadLine:
-    # action 是否被開啟 開啟就繼續執行
-    # action 是否被開啟 沒開啟就跳掉
 
     def __init__(self, s):
-        self.ui = Ui_MainWindow()
         self.buf = bytearray()
         self.s = s
 
     print('hello')
+
     def readline(self):
         i = self.buf.find(b"\n")
         if i >= 0:
@@ -34,7 +38,7 @@ class ReadLine:
             else:
                 self.buf.extend(data)
 
-    def getData(self,  ser):
+    def getData(self, ser):
 
         x = []
         y = []
@@ -53,26 +57,10 @@ class ReadLine:
         pyplot.show()
         pyplot.tight_layout()
 
-        # ## Tab_2 ## #
-        self.ui.HX711_plot = QtWidgets.QWidget()
-        self.ui.HX711_plot.setObjectName("HX711_plot")
-
-        # objects in tab2
-        self.figure = fig
-        self.canvas = FigureCanvas(self.figure)
-
-        layout = QtGui.QVBoxLayout()
-        layout.addWidget(self.canvas)
-        self.setLayout(layout)
-        self.plot()
-
-        self.tabWidget.addTab(self.HX711_plot, "")
-
         j = 0
 
         try:
             while read_continue:
-                print("wait")
                 while ser.inWaiting():
                     j += 1
                     test = ReadLine(ser)

@@ -2,6 +2,9 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QGridLayout
 import serial
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import numpy as np
 
 from ui import Ui_MainWindow
 import HX711_plot as HX
@@ -17,6 +20,16 @@ ser = serial.Serial(COM_PORT, BAUD_RATES, timeout=1)  # time out /s
 #COM_PORT_2 = '/dev/tty.usbserial-1410'  # ESP 8266
 #BAUD_RATES_2 = 9600                     # baud rates
 #ser_2 = serial.Serial(COM_PORT_2, BAUD_RATES_2, timeout=1)  # time out /s
+
+class MyFigure(FigureCanvas):
+
+    def __init__(self, width=5, height=4, dpi=100):
+        # 第一步：创建一个创建Figure
+        self.fig = Figure(figsize=(width, height), dpi=dpi)
+        # 第二步：在父类中激活Figure窗口
+        super(MyFigure, self).__init__(self.fig)  # 此句必不可少，否则不能显示图形
+        # 第三步：创建一个子图，用于绘制图形用，111表示子图编号，如matlab的subplot(1,1,1)
+        self.axes = self.fig.add_subplot(111)
 
 class MainWindow(QtWidgets.QMainWindow):
     right_velocity = 0
@@ -43,6 +56,15 @@ class MainWindow(QtWidgets.QMainWindow):
         # tab2 button clicked trigger
         self.ui.plot_action.clicked.connect(self.plot_action_button_clicked)
         self.ui.plot_stop.clicked.connect(self.plot_stop_button_clicked)
+
+        # Figure in groupBox
+        self.F = MyFigure(width=5, height=4, dpi=100)
+        t = np.arange(0.0, 5.0, 0.01)
+        s = np.cos(2 * np.pi * t)
+        self.F.axes.plot(t, s)
+        self.F.fig.suptitle("cos")
+        self.gridlayout = QGridLayout(self.ui.groupBox)  # 創建gridlayout繼承groupBox
+        self.gridlayout.addWidget(self.F, 0, 1)  # figure放進gridlayout
 
     def stop_button_clicked(self):
         print("stop")
